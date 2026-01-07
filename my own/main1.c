@@ -262,4 +262,5 @@ void cust_view(){
     		shop[i].pStock, shop[i].pCategory);
     	}
 	}
+
 }
