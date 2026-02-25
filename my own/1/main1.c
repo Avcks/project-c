@@ -6,9 +6,10 @@
  ============================================================
 */
 
-#include<stdio.h>
-#include<string.h>
-#include<ctype.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h> /* Added for system() commands */
 
 #define MAX_ITEMS   100
 #define MAX_MEMBERS 100
@@ -145,9 +146,10 @@ void mainManu() {
 				break;
             case 0: 
 				printHeader("Thank you for visiting AYH Mart!"); 
-				return;
+				exit(0);
             default: 
 				printf("  [!] Invalid option. Try again.\n");
+                system("pause");
         }
     }
 }
@@ -163,12 +165,15 @@ void login() {
 
     if (strcmp(username, ad_user) == 0 && strcmp(password, ad_pass) == 0) {
         printf("\n  [✓] Logged in as ADMIN\n");
+        system("pause");
         adminDashboard();
     } else if (strcmp(username, sf_user) == 0 && strcmp(password, sf_pass) == 0) {
         printf("\n  [✓] Logged in as STAFF\n");
+        system("pause");
         staff();
     } else {
         printf("\n  [✗] Incorrect username or password.\n");
+        system("pause");
     }
 }
 
@@ -202,10 +207,12 @@ void adminDashboard() {
 			break;
         case 0: 
 			printf("\n  [✓] Logged out successfully.\n\n"); 
+            system("pause");
 			mainManu(); 
 			break;
         default:
             printf("  [!] Invalid option.\n");
+            system("pause");
             adminDashboard();
     }
 }
@@ -217,7 +224,7 @@ void inventory() {
     printHeader("AYH MART  |  Surat, India");
     printHeader("INVENTORY MANAGEMENT");
     printf("  1. Add Product(s)\n");
-    printf("  2. Edit Product\n");        /* NEW */
+    printf("  2. Edit Product\n");
     printf("  3. Delete Product\n");
     printf("  4. View All Products\n");
     printf("  0. Back\n");
@@ -227,11 +234,14 @@ void inventory() {
 
     switch (choice) {
         case 1: add();         break;
-        case 2: editProduct(); break;   /* NEW */
+        case 2: editProduct(); break;
         case 3: del();         break;
         case 4: view();        break;
         case 0: adminDashboard(); break;
-        default: printf("  [!] Invalid option.\n");
+        default: 
+            printf("  [!] Invalid option.\n");
+            system("pause");
+            inventory();
     }
 }
 
@@ -246,6 +256,7 @@ void add() {
     for (i = 0; i < count; i++) {
         if (nProducts >= MAX_ITEMS) {
             printf("  [!] Product limit reached (%d max).\n", MAX_ITEMS);
+            system("pause");
             inventory();
             return;
         }
@@ -258,10 +269,11 @@ void add() {
         nProducts++;
     }
     printf("\n  [✓] %d product(s) added successfully.\n", count);
+    system("pause");
     inventory();
 }
 
-/* ── Edit product (NEW #2) ── */
+/* ── Edit product ── */
 void editProduct() {
     int code, found = 0, i;
     printf("\n  Enter Product Code to Edit: ");
@@ -298,12 +310,14 @@ void editProduct() {
         }
     }
     if (!found) printf("  [✗] Product code not found.\n");
+    system("pause");
     inventory();
 }
 
 /* ── View products ── */
 void view() {
     int i;
+    system("cls");
     printHeader("AVAILABLE PRODUCTS");
     if (nProducts == 0) {
         printf("  No products in inventory.\n");
@@ -316,6 +330,8 @@ void view() {
                    shop[i].pStock, shop[i].pCategory);
         }
     }
+    printf("\n");
+    system("pause");
     inventory();
 }
 
@@ -335,6 +351,7 @@ void del() {
         }
     }
     if (!found) printf("  [✗] Product code not found.\n");
+    system("pause");
     inventory();
 }
 
@@ -348,13 +365,13 @@ void info() {
     printf("  Timing       : 9 AM – 10 PM (Mon–Sun)\n");
     printf("  Developed By : Aum, Yesh, HariKrushna\n");
     printLine();
+    system("pause");
     mainManu();
 }
 
 /* ══════════════════ CUSTOMER MENU ══════════════════ */
 void cust() {
     int choice, i;
-    
     system("cls");
     printHeader("AYH MART  |  Surat, India");
     printHeader("CUSTOMER SELF-CHECKOUT");
@@ -376,6 +393,7 @@ void cust() {
 			search();   
 			break;
         case 3:
+            system("cls");
             printHeader("ADD ITEM TO BASKET");
             if (nProducts == 0) {
                 printf("  No products available.\n");
@@ -400,6 +418,8 @@ void cust() {
 			break;
         default: 
 			printf("  [!] Invalid option.\n");
+            system("pause");
+            cust();
     }
 }
 
@@ -414,15 +434,18 @@ void custView() {
     } else {
         printf("  %-6s  %-18s  %-8s  %-6s  %s\n", "CODE", "NAME", "PRICE", "STOCK", "CATEGORY");
         printDash();
-        for (i = 0; i < nProducts; i++)
+        for (i = 0; i < nProducts; i++){
             printf("  %-6d  %-18s  %-8.2f  %-6d  %s\n",
                    shop[i].pCode, shop[i].pName, shop[i].pPrice,
                    shop[i].pStock, shop[i].pCategory);
+		}
     }
+    printf("\n");
+    system("pause");
     cust();
 }
 
-/* ── Search – updated format (#5) ── */
+/* ── Search ── */
 void search() {
     int code, found = 0, i;
     system("cls");
@@ -444,17 +467,21 @@ void search() {
         }
     }
     if (!found) printf("  [✗] Product not found.\n");
+    printf("\n");
+    system("pause");
     cust();
 }
 
-/* ── Add to cart – with price confirmation (#6) ── */
+/* ── Add to cart ── */
 void addCart() {
     int   code, qty, found = 0, i;
     char  confirm[4];
-	system("cls");
-    printHeader("AYH MART  |  Surat, India");
+    
+    /* Removed system("cls") so user can still read the products printed in cust() */
+
     if (cartCount >= MAX_CART) {
         printf("  [!] Cart is full!\n");
+        system("pause");
         cust();
         return;
     }
@@ -471,7 +498,7 @@ void addCart() {
                 found = 1;
                 break;
             }
-            /* ── Verification before adding (#6) ── */
+            
             printf("\n  ┌─ Confirm Item ─────────────────────┐\n");
             printf("  │  Name  : %-27s│\n", shop[i].pName);
             printf("  │  Price : %-5.2f per unit             │\n", shop[i].pPrice);
@@ -497,6 +524,8 @@ void addCart() {
         }
     }
     if (!found) printf("  [✗] Product unavailable.\n");
+    printf("\n");
+    system("pause");
     cust();
 }
 
@@ -521,6 +550,8 @@ void viewCart() {
         printDash();
         printf("  %-40s  %.2f\n", "Grand Total:", total);
     }
+    printf("\n");
+    system("pause");
     cust();
 }
 
@@ -532,6 +563,7 @@ void checkout() {
     printHeader("AYH MART  |  Surat, India");
     if (cartCount == 0) {
         printf("  [!] Basket is empty.\n");
+        system("pause");
         cust();
         return;
     }
@@ -582,13 +614,14 @@ void checkout() {
     cartCount = 0;
 }
 
-/* ── Billing – FIX: parameter is float (#8), &payAmount → payAmount ── */
+/* ── Billing ── */
 void billing(float finalAmount, int isQR) {
     if (isQR) {
         printLine();
         printf("  Transaction ID: AYH%d\n", 1000 + totalBills);
         printf("  Thank you for shopping at AYH Mart!\n");
         printLine();
+        system("pause");
         mainManu();
         return;
     }
@@ -604,6 +637,7 @@ void billing(float finalAmount, int isQR) {
         printf("  [✓] Payment received! Change: %.2f\n", change);
         printf("  Thank you for shopping at AYH Mart!\n");
         printLine();
+        system("pause");
         mainManu();
     } else {
         printf("  [!] Insufficient. Need %.2f more.\n", finalAmount - payAmount);
@@ -630,11 +664,14 @@ void members() {
         case 2: deleteMembers(); break;
         case 3: viewMembers();   break;
         case 0: adminDashboard(); break;
-        default: printf("  [!] Invalid option.\n");
+        default: 
+            printf("  [!] Invalid option.\n");
+            system("pause");
+            members();
     }
 }
 
-/* ── Add members – tier validation (#3) ── */
+/* ── Add members ── */
 void addMembers() {
     int  count, i;
     char tier[20];
@@ -653,12 +690,10 @@ void addMembers() {
         printf("  Name      : "); scanf("%s",   Members[nMembers].mName);
         printf("  Amount Spent: "); scanf("%f", &Members[nMembers].mSpent);
 
-        /* ── Tier validation: accepts Silver/s, Gold/g, Platinum/p (#3) ── */
         while (1) {
             printf("  Tier (Silver/s | Gold/g | Platinum/p): ");
             scanf("%s", tier);
 
-            /* normalise to lowercase first char */
             char c = tolower((unsigned char)tier[0]);
 
             if (c == 's') {
@@ -680,6 +715,7 @@ void addMembers() {
         nMembers++;
     }
     printf("\n  [✓] Member(s) added successfully.\n");
+    system("pause");
     members();
 }
 
@@ -701,12 +737,14 @@ void deleteMembers() {
         }
     }
     if (!found) printf("  [✗] Member ID not found.\n");
+    system("pause");
     members();
 }
 
-/* ── View members – discount display fix (#7) ── */
+/* ── View members ── */
 void viewMembers() {
     int i;
+    system("cls");
     printHeader("ALL MEMBERS");
     if (nMembers == 0) {
         printf("  No members registered.\n");
@@ -715,7 +753,7 @@ void viewMembers() {
                "ID", "NAME", "SPENT", "TIER", "DISCOUNT");
         printDash();
         for (i = 0; i < nMembers; i++) {
-            printf("  %-5d  %-18s  %-10.2f  %-10s  %.0f%%\n",   /* FIX #7: %.0f%% shows integer % correctly */
+            printf("  %-5d  %-18s  %-10.2f  %-10s  %.0f%%\n",
                    Members[i].mId,
                    Members[i].mName,
                    Members[i].mSpent,
@@ -723,6 +761,8 @@ void viewMembers() {
                    Members[i].mDisc);
         }
     }
+    printf("\n");
+    system("pause");
     members();
 }
 
@@ -770,7 +810,9 @@ void salesManu() {
             case 2: productSales(); break;
             case 3: discountReport(); break;
             case 0: return;
-            default: printf("  [!] Invalid option.\n");
+            default: 
+                printf("  [!] Invalid option.\n");
+                system("pause");
         }
     }
 }
@@ -787,29 +829,44 @@ void salesSummary() {
     printf("  Total Discount Given  : %.2f\n", totalDiscount);
     printf("  Net Revenue           : %.2f\n", totalRevenue - totalDiscount);
     printDash();
+    system("pause");
 }
 
 void productSales() {
     int i;
+    system("cls");
     printHeader("PRODUCT SALES REPORT");
-    printf("  %-6s  %-18s  %-6s  %s\n", "CODE", "NAME", "QTY", "TOTAL");
-    printDash();
-    for (i = 0; i < nSales; i++)
-        printf("  %-6d  %-18s  %-6d  %.2f\n",
-               sales[i].pCode, sales[i].pName, sales[i].qty, sales[i].total);
+    if (nSales == 0) {
+        printf("  No sales recorded yet.\n");
+    } else {
+        printf("  %-6s  %-18s  %-6s  %s\n", "CODE", "NAME", "QTY", "TOTAL");
+        printDash();
+        for (i = 0; i < nSales; i++)
+            printf("  %-6d  %-18s  %-6d  %.2f\n",
+                   sales[i].pCode, sales[i].pName, sales[i].qty, sales[i].total);
+    }
+    printf("\n");
+    system("pause");
 }
 
 void discountReport() {
     int i;
+    system("cls");
     printHeader("MEMBER DISCOUNT REPORT");
-    printf("  %-5s  %-18s  %-10s  %-10s  %s\n",
-           "ID", "NAME", "SPENT", "TIER", "DISCOUNT");
-    printDash();
-    for (i = 0; i < nMembers; i++)
-        printf("  %-5d  %-18s  %-10.2f  %-10s  %.0f%%\n",
-               Members[i].mId, Members[i].mName,
-               Members[i].mSpent, Members[i].mTier,
-               Members[i].mDisc);
+    if (nMembers == 0) {
+        printf("  No members recorded.\n");
+    } else {
+        printf("  %-5s  %-18s  %-10s  %-10s  %s\n",
+               "ID", "NAME", "SPENT", "TIER", "DISCOUNT");
+        printDash();
+        for (i = 0; i < nMembers; i++)
+            printf("  %-5d  %-18s  %-10.2f  %-10s  %.0f%%\n",
+                   Members[i].mId, Members[i].mName,
+                   Members[i].mSpent, Members[i].mTier,
+                   Members[i].mDisc);
+    }
+    printf("\n");
+    system("pause");
 }
 
 /* ══════════════════ STAFF PORTAL ══════════════════ */
@@ -822,8 +879,8 @@ void staff() {
     printf("  2. View All Members\n");
     printf("  3. Add New Member\n");
     printf("  4. Remove Member\n");
-    printf("  5. View Sales Summary\n");    /* NEW */
-    printf("  6. Search Product\n");        /* NEW */
+    printf("  5. View Sales Summary\n");    
+    printf("  6. Search Product\n");        
     printf("  0. Logout\n");
     printDash();
     printf("  Enter your choice: ");
@@ -831,8 +888,8 @@ void staff() {
 
     switch (choice) {
         case 1: {
-            /* Staff reads inventory but returns to staff menu */
             int i;
+            system("cls");
             printHeader("INVENTORY (Staff View)");
             if (nProducts == 0) {
                 printf("  No products.\n");
@@ -845,11 +902,14 @@ void staff() {
                            shop[i].pCode, shop[i].pName, shop[i].pPrice,
                            shop[i].pStock, shop[i].pCategory);
             }
+            printf("\n");
+            system("pause");
             staff();
             break;
         }
         case 2: {
             int i;
+            system("cls");
             printHeader("ALL MEMBERS (Staff View)");
             if (nMembers == 0) {
                 printf("  No members registered.\n");
@@ -863,6 +923,8 @@ void staff() {
                            Members[i].mSpent, Members[i].mTier,
                            Members[i].mDisc);
             }
+            printf("\n");
+            system("pause");
             staff();
             break;
         }
@@ -896,15 +958,19 @@ void staff() {
                 }
             }
             if (!found) printf("  [✗] Product not found.\n");
+            printf("\n");
+            system("pause");
             staff();
             break;
         }
         case 0:
             printf("  [✓] Logged out.\n");
+            system("pause");
             mainManu();
             break;
         default:
             printf("  [!] Invalid option.\n");
+            system("pause");
             staff();
     }
 }
@@ -916,7 +982,6 @@ void underDev() {
     printHeader("AYH MART  |  Surat, India");
     printHeader("SYSTEM MODULES - UNDER DEVELOPMENT");
     
-    // Menu options derived from the "Under Development" box in the flowchart
     printf("  1. Employee Management\n");
     printf("  2. Stock Alerts / Reorder Levels\n");
     printf("  3. Expense Tracking\n");
@@ -945,18 +1010,16 @@ void underDev() {
             printf("\n  [!] Status: File handling logic in progress.\n");
             break;
         case 0:
-            adminDashboard(); // Returns to Admin Portal
+            adminDashboard(); 
             return;
         default:
             printf("\n  [!] Invalid choice. Please select 0-5.\n");
+            system("pause");
             underDev();
             return;
     }
 
-    printf("\n  Press Enter to return to Development Menu...");
-    getchar(); // Clear newline
-    getchar(); // Wait for user
+    printf("\n");
+    system("pause");
     underDev();
 }
-
-
