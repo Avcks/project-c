@@ -1,0 +1,14 @@
+sales report should be seen by 
+renew the card
+
+
+------PPT------
+
+1 summery of project
+2 objective point wise
+3 system decription
+4 source code
+5 screenshorts
+6 flow charts
+7 test cases
+8 test case id ==== functionality==== input ===== (precondition) ===== expected output ===== status
