@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AYH Mart — C Project Analysis</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #f5f5f3; color: #1a1a18; padding: 2rem; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a18; color: #e2e0d6; }
+    .card { background: #2a2a28; }
+    .card-border { background: #1f1f1d; border-color: rgba(255,255,255,0.12); }
+    .row { border-color: rgba(255,255,255,0.08); }
+    .issue { border-color: rgba(255,255,255,0.08); }
+    .tab { background: #1f1f1d; border-color: rgba(255,255,255,0.12); color: #9c9a92; }
+    .tab.active { background: #2a2a28; color: #e2e0d6; border-color: rgba(255,255,255,0.2); }
+    .row-key, .bar-label, .stat-lbl { color: #9c9a92; }
+    h3 { color: #9c9a92; }
+    .badge-blue { background: #0c2e52; color: #6db3f2; }
+    .badge-green { background: #162a07; color: #7fc73a; }
+    .badge-warn { background: #3d2600; color: #f5b942; }
+    .badge-red { background: #3d0e0e; color: #f07070; }
+    .bar-bg { background: rgba(255,255,255,0.1); }
+    .suggest { background: #222220; border-color: #3a6fa8; color: #9c9a92; }
+    .suggest strong { color: #e2e0d6; }
+    code { background: rgba(255,255,255,0.08); color: #e2e0d6; }
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h2 { font-size: 22px; font-weight: 500; margin-bottom: 1rem; }
+  h3 { font-size: 13px; font-weight: 500; color: #5f5e5a; margin-bottom: .5rem; letter-spacing: .03em; text-transform: uppercase; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+  .grid4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 1.5rem; }
+  @media (max-width: 600px) {
+    .grid4 { grid-template-columns: 1fr 1fr; }
+    .grid3 { grid-template-columns: 1fr 1fr; }
+    .grid2 { grid-template-columns: 1fr; }
+  }
+  .card { background: #eeecea; border-radius: 12px; padding: 1rem 1.25rem; }
+  .card-border { background: #fff; border: 0.5px solid rgba(0,0,0,0.12); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .stat-num { font-size: 28px; font-weight: 500; }
+  .stat-lbl { font-size: 12px; color: #5f5e5a; margin-top: 2px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+  .badge-blue { background: #e6f1fb; color: #185fa5; }
+  .badge-green { background: #eaf3de; color: #3b6d11; }
+  .badge-warn { background: #faeeda; color: #854f0b; }
+  .badge-red { background: #fcebeb; color: #a32d2d; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 0.5px solid rgba(0,0,0,0.08); font-size: 13px; }
+  .row:last-child { border-bottom: none; }
+  .row-key { color: #5f5e5a; }
+  .row-val { font-weight: 500; }
+  .issue { display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; border-bottom: 0.5px solid rgba(0,0,0,0.08); font-size: 13px; line-height: 1.5; }
+  .issue:last-child { border-bottom: none; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .dot-red { background: #E24B4A; }
+  .dot-warn { background: #EF9F27; }
+  .dot-green { background: #639922; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .tab { padding: 6px 14px; font-size: 13px; border: 0.5px solid rgba(0,0,0,0.12); border-radius: 6px; cursor: pointer; background: #fff; color: #5f5e5a; }
+  .tab.active { background: #eeecea; color: #1a1a18; font-weight: 500; border-color: rgba(0,0,0,0.2); }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .bar-wrap { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 12px; }
+  .bar-label { color: #5f5e5a; width: 120px; flex-shrink: 0; text-align: right; }
+  .bar-bg { flex: 1; background: rgba(0,0,0,0.08); border-radius: 3px; height: 8px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .bar-val { font-weight: 500; width: 34px; flex-shrink: 0; }
+  .suggest { background: #f5f5f3; border-left: 2px solid #3a6fa8; padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 13px; color: #5f5e5a; margin: 6px 0; line-height: 1.5; }
+  .suggest strong { color: #1a1a18; font-weight: 500; }
+  code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 3px; font-size: 12px; font-family: monospace; }
+  section { margin-bottom: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h2 style="margin-bottom:1.5rem;">AYH Mart — C project analysis</h2>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('overview',this)">Overview</div>
+  <div class="tab" onclick="showTab('structure',this)">Architecture</div>
+  <div class="tab" onclick="showTab('issues',this)">Issues</div>
+  <div class="tab" onclick="showTab('suggestions',this)">Suggestions</div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="panel active" id="tab-overview">
+  <div class="grid4">
+    <div class="card"><div class="stat-num">1,723</div><div class="stat-lbl">Lines of code</div></div>
+    <div class="card"><div class="stat-num">40+</div><div class="stat-lbl">Functions</div></div>
+    <div class="card"><div class="stat-num">5</div><div class="stat-lbl">Structs / data models</div></div>
+    <div class="card"><div class="stat-num">5</div><div class="stat-lbl">Persistent .dat files</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card-border">
+      <h3>Data models</h3>
+      <div class="row"><span class="row-key">Product</span><span class="row-val">code, name, price, stock, category</span></div>
+      <div class="row"><span class="row-key">Member</span><span class="row-val">id, name, spent, tier, discount, used</span></div>
+      <div class="row"><span class="row-key">CartItem</span><span class="row-val">code, name, price, qty</span></div>
+      <div class="row"><span class="row-key">Sale</span><span class="row-val">pCode, pName, qty, price, total, custId</span></div>
+      <div class="row"><span class="row-key">Customer</span><span class="row-val">id, name, password, memberId</span></div>
+    </div>
+    <div class="card-border">
+      <h3>Capacity limits</h3>
+      <div class="row"><span class="row-key">Max products</span><span class="row-val">100</span></div>
+      <div class="row"><span class="row-key">Max members</span><span class="row-val">100</span></div>
+      <div class="row"><span class="row-key">Max cart items</span><span class="row-val">50</span></div>
+      <div class="row"><span class="row-key">Max customers</span><span class="row-val">100</span></div>
+      <div class="row"><span class="row-key">Max sales records</span><span class="row-val">1,000</span></div>
+    </div>
+  </div>
+
+  <div class="card-border">
+    <h3>Feature modules</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">
+      <span class="badge badge-blue">Self-checkout (customer)</span>
+      <span class="badge badge-blue">Admin dashboard</span>
+      <span class="badge badge-blue">Staff portal</span>
+      <span class="badge badge-blue">Inventory CRUD</span>
+      <span class="badge badge-blue">Member tiers (Silver/Gold/Platinum)</span>
+      <span class="badge badge-blue">Cart &amp; billing</span>
+      <span class="badge badge-blue">Cash &amp; QR payment</span>
+      <span class="badge badge-blue">Discount engine</span>
+      <span class="badge badge-blue">Sales reports</span>
+      <span class="badge badge-blue">Customer accounts</span>
+      <span class="badge badge-blue">File persistence (.dat)</span>
+      <span class="badge badge-blue">Backup &amp; restore</span>
+      <span class="badge badge-blue">Password masking</span>
+      <span class="badge badge-blue">Purchase history</span>
+    </div>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="panel" id="tab-structure">
+  <div class="card-border">
+    <h3>Call flow — user roles</h3>
+    <div style="margin-top:8px;font-size:13px;color:#5f5e5a;line-height:1.9;font-family:monospace;">
+      <div><strong style="color:inherit">main()</strong> → loadAllData() → <strong>mainManu()</strong></div>
+      <div style="margin-left:16px;">├── <strong>cust()</strong> → customerLogin() → view / search / addCart / viewCart / checkout / viewMyCard</div>
+      <div style="margin-left:16px;">├── <strong>login()</strong></div>
+      <div style="margin-left:32px;">├── admin → adminDashboard() → inventory / members / salesManu / custManage / backupRestore</div>
+      <div style="margin-left:32px;">└── staff → staff() → view / search / checkout / sales / customer mgmt</div>
+      <div style="margin-left:16px;">└── <strong>info()</strong> — store details</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card-border">
+      <h3>File persistence</h3>
+      <div class="row"><span class="row-key">ayhmart_products.dat</span><span class="badge badge-blue">Binary</span></div>
+      <div class="row"><span class="row-key">ayhmart_members.dat</span><span class="badge badge-blue">Binary</span></div>
+      <div class="row"><span class="row-key">ayhmart_customers.dat</span><span class="badge badge-blue">Binary</span></div>
+      <div class="row"><span class="row-key">ayhmart_sales.dat</span><span class="badge badge-blue">Binary</span></div>
+      <div class="row"><span class="row-key">ayhmart_counters.dat</span><span class="badge badge-blue">Binary</span></div>
+    </div>
+    <div class="card-border">
+      <h3>Member discount tiers</h3>
+      <div class="row"><span class="row-key">Silver</span><span class="row-val" style="color:#3b6d11">5% off</span></div>
+      <div class="row"><span class="row-key">Gold</span><span class="row-val" style="color:#854f0b">10% off</span></div>
+      <div class="row"><span class="row-key">Platinum</span><span class="row-val" style="color:#534ab7">15% off</span></div>
+      <div class="row"><span class="row-key">One-use per card</span><span class="badge badge-warn">mUsed flag</span></div>
+    </div>
+  </div>
+
+  <div class="card-border">
+    <h3>Code distribution by module (approx.)</h3>
+    <div style="margin-top:10px;">
+      <div class="bar-wrap"><span class="bar-label">File I/O</span><div class="bar-bg"><div class="bar-fill" style="width:28%;background:#3B8BD4"></div></div><span class="bar-val">~28%</span></div>
+      <div class="bar-wrap"><span class="bar-label">Admin portal</span><div class="bar-bg"><div class="bar-fill" style="width:22%;background:#7F77DD"></div></div><span class="bar-val">~22%</span></div>
+      <div class="bar-wrap"><span class="bar-label">Customer flow</span><div class="bar-bg"><div class="bar-fill" style="width:18%;background:#1D9E75"></div></div><span class="bar-val">~18%</span></div>
+      <div class="bar-wrap"><span class="bar-label">Sales &amp; billing</span><div class="bar-bg"><div class="bar-fill" style="width:14%;background:#EF9F27"></div></div><span class="bar-val">~14%</span></div>
+      <div class="bar-wrap"><span class="bar-label">Members</span><div class="bar-bg"><div class="bar-fill" style="width:10%;background:#D85A30"></div></div><span class="bar-val">~10%</span></div>
+      <div class="bar-wrap"><span class="bar-label">Helpers / UI</span><div class="bar-bg"><div class="bar-fill" style="width:8%;background:#888780"></div></div><span class="bar-val">~8%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ISSUES -->
+<div class="panel" id="tab-issues">
+  <div class="grid3" style="margin-bottom:1rem;">
+    <div class="card"><div class="stat-num" style="color:#E24B4A">4</div><div class="stat-lbl">Critical issues</div></div>
+    <div class="card"><div class="stat-num" style="color:#EF9F27">5</div><div class="stat-lbl">Warnings</div></div>
+    <div class="card"><div class="stat-num" style="color:#639922">5</div><div class="stat-lbl">Good practices found</div></div>
+  </div>
+
+  <div class="card-border">
+    <h3>Critical</h3>
+    <div class="issue"><div class="dot dot-red"></div><div><strong>Passwords stored in plain text</strong> — <code>customers[].cPass</code> is stored as raw text in the .dat file and even printed in <code>viewCustomers()</code>. Anyone with file access can read all passwords.</div></div>
+    <div class="issue"><div class="dot dot-red"></div><div><strong>Hardcoded admin/staff credentials</strong> — <code>ad_user="admin"</code>, <code>ad_pass="admin"</code> in global variables. Trivially guessable and can't be changed without recompiling.</div></div>
+    <div class="issue"><div class="dot dot-red"></div><div><strong>Buffer overflow risk in scanf</strong> — <code>scanf("%s", ...)</code> used without width limits on many string reads (e.g. product name, customer name). Overlong input will overwrite adjacent memory.</div></div>
+    <div class="issue"><div class="dot dot-red"></div><div><strong>Unbounded recursion for navigation</strong> — menus call themselves recursively on bad input (e.g. <code>adminDashboard()</code> calling itself). With enough navigation steps, the stack will overflow.</div></div>
+  </div>
+
+  <div class="card-border">
+    <h3>Warnings</h3>
+    <div class="issue"><div class="dot dot-warn"></div><div><strong>Windows-only</strong> — uses <code>&lt;windows.h&gt;</code>, <code>&lt;conio.h&gt;</code>, <code>system("cls")</code>, <code>system("pause")</code>. Will not compile or run on Linux/macOS.</div></div>
+    <div class="issue"><div class="dot dot-warn"></div><div><strong>No numeric input validation</strong> — entering a letter where a number is expected leaves garbage in the input buffer and corrupts subsequent <code>scanf</code> reads.</div></div>
+    <div class="issue"><div class="dot dot-warn"></div><div><strong>Cart not cleared on logout</strong> — <code>cartCount</code> is reset after checkout, but if the customer logs out without checking out, cart items persist to the next session.</div></div>
+    <div class="issue"><div class="dot dot-warn"></div><div><strong>Real UPI ID hardcoded</strong> — <code>6353999107@ptyes</code> is embedded directly in source. Fine for a project, not for production.</div></div>
+    <div class="issue"><div class="dot dot-warn"></div><div><strong>Sales log silently drops records</strong> — once <code>nSales == MAX_SALES (1000)</code>, <code>recordSale()</code> silently drops all new transactions with no warning.</div></div>
+  </div>
+
+  <div class="card-border">
+    <h3>Good practices</h3>
+    <div class="issue"><div class="dot dot-green"></div><div>Duplicate product code and customer ID checks before insertion</div></div>
+    <div class="issue"><div class="dot dot-green"></div><div>Password confirmation on customer account creation</div></div>
+    <div class="issue"><div class="dot dot-green"></div><div>Stock deducted and persisted immediately on cart add</div></div>
+    <div class="issue"><div class="dot dot-green"></div><div>Full <code>saveAllData()</code> call on checkout ensures no data loss</div></div>
+    <div class="issue"><div class="dot dot-green"></div><div>All forward declarations at top — clean compilation order</div></div>
+  </div>
+</div>
+
+<!-- SUGGESTIONS -->
+<div class="panel" id="tab-suggestions">
+  <section>
+    <div class="card-border">
+      <h3>Security fixes (high priority)</h3>
+      <div class="suggest"><strong>Hash passwords</strong> — use a hash (e.g. djb2 or SHA-256) before storing. Never write raw passwords to disk or display them on screen.</div>
+      <div class="suggest"><strong>Protect admin credentials</strong> — read them from a config file or environment variable, not hardcoded in source. Apply the same hashing.</div>
+      <div class="suggest"><strong>Limit scanf widths</strong> — change <code>scanf("%s", name)</code> to <code>scanf("%49s", name)</code> to match the buffer size. Apply consistently to all string inputs.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="card-border">
+      <h3>Code quality improvements</h3>
+      <div class="suggest"><strong>Replace recursion with loops</strong> — convert all menu functions to use a <code>while(1)</code> loop with a <code>break</code> on exit, instead of calling themselves.</div>
+      <div class="suggest"><strong>Clear cart on logout</strong> — add <code>cartCount = 0;</code> in the customer logout path inside <code>cust()</code>, not only after checkout.</div>
+      <div class="suggest"><strong>Validate numeric input</strong> — check <code>scanf</code>'s return value and call <code>while(getchar()!='\n');</code> to flush the buffer on bad input.</div>
+      <div class="suggest"><strong>Remove duplicate code</strong> — <code>custManage()</code> and the case-7 block inside <code>staff()</code> are nearly identical. Extract into one shared function.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="card-border">
+      <h3>Feature enhancements</h3>
+      <div class="suggest"><strong>Sales log rotation</strong> — when <code>nSales</code> hits the limit, archive old records to a separate file rather than dropping them silently.</div>
+      <div class="suggest"><strong>Product search by name</strong> — currently customers can only search by product code; a name-based search would be more natural.</div>
+      <div class="suggest"><strong>Itemised receipt</strong> — after checkout, print product names, quantities, unit prices, discount applied, and a transaction ID.</div>
+      <div class="suggest"><strong>Portability</strong> — replace <code>system("cls")</code> with <code>printf("\033[2J\033[H")</code> and <code>system("pause")</code> with a <code>getchar()</code> loop to support Linux/macOS.</div>
+    </div>
+  </section>
+</div>
+
+</div><!-- .wrap -->
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
