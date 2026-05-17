@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYH Mart Source Code Analysis</title>
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --secondary-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-yellow: #f59e0b;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--secondary-bg);
+        }
+
+        h1 {
+            color: var(--accent-cyan);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            color: var(--accent-cyan);
+            font-size: 1.8rem;
+            margin-top: 2.5rem;
+            border-left: 4px solid var(--accent-cyan);
+            padding-left: 1rem;
+        }
+
+        h3 {
+            color: #e2e8f0;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .card {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-box {
+            background-color: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 4px solid var(--accent-cyan);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: var(--accent-green);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .code-snippet {
+            background-color: #0f172a;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: monospace;
+            color: var(--accent-green);
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>AYH Mart</h1>
+            <div class="subtitle">Source Code Analysis & Architecture Report</div>
+            <p style="color: var(--text-secondary); margin-top: 1rem;">Analyzed File: ayhmart_updated (2).c</p>
+        </header>
+
+        <section>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-value">2,152</div>
+                    <div class="metric-label">Lines of Code</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">6</div>
+                    <div class="metric-label">Core Data Structures</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">6</div>
+                    <div class="metric-label">Data Files (.dat)</div>
+                </div>
+                <div class="metric-box" style="border-top-color: var(--accent-green);">
+                    <div class="metric-value">3+</div>
+                    <div class="metric-label">Access Roles</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>System Overview</h2>
+            <div class="card">
+                <p><strong>AYH Mart</strong> is a comprehensive, terminal-based Point of Sale (POS) and Self-Checkout
+                    System written in C. It is designed to simulate a modern retail environment, featuring robust user
+                    authentication, inventory management, dynamic customer membership tiers, and a seamless
+                    self-checkout process with simulated QR digital payments.</p>
+
+                <div style="margin-top: 1.5rem;">
+                    <span class="tag">C Language</span>
+                    <span class="tag">File I/O</span>
+                    <span class="tag">Structs</span>
+                    <span class="tag">CLI Interface</span>
+                    <span class="tag">Access Control</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Key Capabilities</h2>
+            <div class="card">
+                <ul class="feature-list">
+                    <li><strong>Multi-Role Access Control:</strong> Distinct portals for Admin (full access), Staff
+                        (inventory/member viewing), and Customers (self-checkout).</li>
+                    <li><strong>Dynamic Inventory & Categories:</strong> Products can be added, edited, deleted, and
+                        categorized. Validation ensures unique product codes and names.</li>
+                    <li><strong>Membership Tiers:</strong> Customers can be upgraded to Members with tiers (Silver 5%,
+                        Gold 10%, Platinum 15% discount).</li>
+                    <li><strong>Self-Checkout System:</strong> Customers can browse items, search via code, add to
+                        basket, and checkout using Cash or simulated Digital/QR payment methods.</li>
+                    <li><strong>Data Persistence:</strong> All system state (Products, Members, Customers, Sales,
+                        Categories, Counters) is serialized and stored in binary <code>.dat</code> files.</li>
+                    <li><strong>Backup & Restore:</strong> Built-in functionality for administrators to snapshot the
+                        current state and restore it.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Data Structures Architecture</h2>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Structure Name</th>
+                            <th>Description</th>
+                            <th>Storage Limit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>Product</code></td>
+                            <td>Stores item code, name, price, stock, and category.</td>
+                            <td>100 Items</td>
+                        </tr>
+                        <tr>
+                            <td><code>Member</code></td>
+                            <td>Stores member ID, name, total spent, tier, discount %, and usage status.</td>
+                            <td>100 Members</td>
+                        </tr>
+                        <tr>
+                            <td><code>Customer</code></td>
+                            <td>Stores user credentials (ID, Name, Pass, Phone, Email) and linked Member ID.</td>
+                            <td>100 Customers</td>
+                        </tr>
+                        <tr>
+                            <td><code>CartItem</code></td>
+                            <td>Transient structure for managing a customer's current shopping basket.</td>
+                            <td>50 Items</td>
+                        </tr>
+                        <tr>
+                            <td><code>Sale</code></td>
+                            <td>Transaction logs recording product, quantity, total price, and customer ID.</td>
+                            <td>1,000 Sales</td>
+                        </tr>
+                        <tr>
+                            <td><code>Categories</code></td>
+                            <td>String array managing store sections (e.g. Grocery, Dairy).</td>
+                            <td>50 Categories</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <h2>Code Quality & Observations</h2>
+            <div class="card">
+                <h3>1. Strengths</h3>
+                <ul class="feature-list">
+                    <li><strong>Modular Design:</strong> The code is well-structured into distinct functions
+                        (<code>adminDashboard()</code>, <code>cust()</code>, <code>staff()</code>, etc.), making it
+                        highly readable and maintainable.</li>
+                    <li><strong>Input Masking:</strong> Includes a custom <code>inputPassword()</code> function
+                        utilizing <code>getch()</code> to hide user passwords behind asterisks (*).</li>
+                    <li><strong>ANSI Color Formatting:</strong> Uses ANSI escape codes (e.g., <code>\x1b[32m</code>) to
+                        provide a visually engaging and color-coded terminal experience.</li>
+                    <li><strong>Safety Checks:</strong> Robust existence checks (e.g.,
+                        <code>isProductCodeExists()</code>) and bounds checking (<code>nProducts >= MAX_ITEMS</code>)
+                        prevent buffer overflows and duplicate data.</li>
+                </ul>
+
+                <h3 style="margin-top: 2rem;">2. Areas for Enhancement</h3>
+                <ul class="feature-list">
+                    <li><span style="color: var(--accent-yellow);">Security:</span> Admin and Staff credentials are
+                        hardcoded as plain text strings. Moving these to a configuration file or a secured binary file
+                        would improve security.</li>
+                    <li><span style="color: var(--accent-yellow);">Memory Optimization:</span> The program currently
+                        uses globally declared, fixed-size arrays (e.g., <code>MAX_SALES 1000</code>). Implementing
+                        dynamic memory allocation (<code>malloc</code>/<code>realloc</code>) would allow for infinite
+                        scaling and reduce baseline memory footprint.</li>
+                    <li><span style="color: var(--accent-yellow);">File Locking:</span> The backup and save mechanisms
+                        directly overwrite <code>.dat</code> files without temporary swap files, which could risk data
+                        corruption in the event of a sudden crash during write operations.</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,298 @@
+An analysis of the **AYH Mart - Self Checkout System** source code has been completed. Below is a structured HTML artifact that provides a comprehensive breakdown of the project architecture, file system reliance, data structures, and key function flows.
+
+You can save this code block as an `.html` file (e.g., `analysis.html`) and open it in any browser to view the clean, dashboard-style interface.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYH Mart - Project Analysis Artifact</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --primary: #2b6cb0;
+            --primary-light: #ebf8ff;
+            --accent: #319795;
+            --border-color: #e2e8f0;
+            --code-bg: #1a202c;
+            --code-text: #f7fafc;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: var(--primary);
+            margin: 0 0 10px 0;
+            font-size: 2.2rem;
+        }
+        h2 {
+            color: var(--text-main);
+            border-left: 4px solid var(--accent);
+            padding-left: 10px;
+            margin-top: 40px;
+            font-size: 1.5rem;
+        }
+        h3 {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        p {
+            margin: 0 0 15px 0;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .meta-card {
+            background: var(--primary-light);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        .meta-card strong {
+            display: block;
+            color: var(--primary);
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f7fafc;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #fcfcfc;
+        }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        .badge-file { background: #feebc8; color: #c05621; }
+        .badge-limit { background: #fed7d7; color: #9b2c2c; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>AYH Mart — Codebase Architecture Artifact</h1>
+        <p style="color: var(--text-muted); margin: 0;">Automated design structural audit and static analysis framework mapping.</p>
+        
+        <div class="meta-grid">
+            <div class="meta-card">
+                <strong>Project Name</strong>
+                AYH Mart - Self Checkout System
+            </div>
+            <div class="meta-card">
+                <strong>Development Team</strong>
+                Aum, Yesh, HariKrushna
+            </div>
+            <div class="meta-card">
+                <strong>Target Platform</strong>
+                Windows OS (Win32 API/Console)
+            </div>
+            <div class="meta-card">
+                <strong>Location Context</strong>
+                Surat, India
+            </div>
+        </div>
+    </header>
+
+    <h2>1. System Environment & Memory Allocation Limits</h2>
+    <div class="card">
+        <p>The system uses fixed-size structural arrays paired with sequential counter variables to manage run-time state records. Persistent data operations rely heavily on direct binary streams using structured byte-offsets via standard C I/O libraries.</p>
+        
+        <h3>System Configuration Constants</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Constant Macro</th>
+                    <th>Defined Bounds</th>
+                    <th>Functional Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>MAX_ITEMS</code></td>
+                    <td>100 Records</td>
+                    <td>Maximum unique inventory stock items active in system storage.</td>
+                </tr>
+                <tr>
+                    <td><code>MAX_MEMBERS</code></td>
+                    <td>100 Records</td>
+                    <td>Upper tracking ceiling for active registered customer profiles.</td>
+                </tr>
+                <tr>
+                    <td><code>MAX_CART</code></td>
+                    <td>50 Records</td>
+                    <td>Maximum items permitted concurrently within an individual active transaction checkout session.</td>
+                </tr>
+                <tr>
+                    <td><code>MAX_CUSTOMERS</code></td>
+                    <td>100 Records</td>
+                    <td>Maximum transaction session history entries captured inside active memory limits.</td>
+                </tr>
+                <tr>
+                    <td><code>MAX_SALES</code></td>
+                    <td>1000 Records</td>
+                    <td>Maximum historical itemized sales receipts aggregate ceiling.</td>
+                </tr>
+                <tr>
+                    <td><code>MAX_CATEGORIES</code></td>
+                    <td>50 Records</td>
+                    <td>System limit mapping out unique grouping tags for stock organization.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>2. Storage Infrastructure & Persistent Flat Files</h2>
+    <div class="card">
+        <p>State persistence is decoupled across six native binary data files (<code>.dat</code> format). Writes use exact struct sizes to enforce uniform sequential positioning offsets.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Target Macro Constant</th>
+                    <th>Assigned Physical Filename</th>
+                    <th>Engineered Output Format</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>FILE_PRODUCTS</code></td>
+                    <td><span class="badge badge-file">ayhmart_products.dat</span></td>
+                    <td>Binary stream serialized <code>Product</code> records block cluster.</td>
+                </tr>
+                <tr>
+                    <td><code>FILE_MEMBERS</code></td>
+                    <td><span class="badge badge-file">ayhmart_members.dat</span></td>
+                    <td>Binary stream sequential list tracking loyal consumer accounts.</td>
+                </tr>
+                <tr>
+                    <td><code>FILE_CUSTOMERS</code></td>
+                    <td><span class="badge badge-file">ayhmart_customers.dat</span></td>
+                    <td>Daily customer invoice metadata and session activity tracking maps.</td>
+                </tr>
+                <tr>
+                    <td><code>FILE_SALES</code></td>
+                    <td><span class="badge badge-file">ayhmart_sales.dat</span></td>
+                    <td>Global application transactional itemized lines ledger tracking records.</td>
+                </tr>
+                <tr>
+                    <td><code>FILE_COUNTERS</code></td>
+                    <td><span class="badge badge-file">ayhmart_counters.dat</span></td>
+                    <td>Scalar auto-increment configuration keys handling primary ID tracking rules.</td>
+                </tr>
+                <tr>
+                    <td><code>FILE_CATEGORIES</code></td>
+                    <td><span class="badge badge-file">ayhmart_categories.dat</span></td>
+                    <td>Dynamic array strings mapping layout allocations for inventory tags.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>3. Architectural Audit & Critical Code Observations</h2>
+    <div class="card">
+        <h3>Console Presentation & Portability Layer</h3>
+        <p>The current implementation utilizes standard dynamic Windows API terminal coloring rules via ANSI escape sequence assignments (e.g., <code>\x1b[36m</code>). It explicitly relies on Win32 internal commands via shell executions:</p>
+        <ul>
+            <li><code>system("cls")</code> handles terminal display refreshes.</li>
+            <li><code>system("pause")</code> manages UI rendering blocking frames during interactive state readouts.</li>
+        </ul>
+        
+        <h3>Category Subsystem Lifecycle Loop</h3>
+        <p>Category tracking isolates array alterations safely inside structural blocks. Take note of the implementation interface mechanics discovered inside the update profile routines:</p>
+        <ul>
+            <li><strong>Deletion Processing:</strong> Removes items via left-shifting array elements from index points, decreasing the global count tracker safely (<code>nCategories--</code>).</li>
+            <li><strong>Persistent Flush:</strong> Calls <code>saveCategories()</code> directly following mutations to minimize data loss.</li>
+            <li><strong>Recursive Navigation Style:</strong> Relies on explicit function callbacks (e.g., looping back to <code>categoryManage()</code>) to maintain UI menu state transitions.</li>
+        </ul>
+
+        <h3>Recommended Infrastructure Refactoring Guidelines</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Identified Subsystem Area</th>
+                    <th>Observed Risk Status</th>
+                    <th>Target Optimization Strategy</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Execution Calls</strong></td>
+                    <td><span class="badge badge-limit">Platform Lock</span></td>
+                    <td>Replace direct <code>system()</code> calls with native platform UI hooks or standard C line breaks to improve application portability.</td>
+                </tr>
+                <tr>
+                    <td><strong>Menu Recursion</strong></td>
+                    <td><span class="badge badge-limit">Stack Growth</span></td>
+                    <td>Convert recursive functional menu jumps into centralized tracking loop blocks (like a <code>while(running)</code> loop) to prevent stack build-up during long operational sessions.</td>
+                </tr>
+                <tr>
+                    <td><strong>Dynamic Bounds</strong></td>
+                    <td><span class="badge badge-limit">Static Ceilings</span></td>
+                    <td>Migrate fixed array structures to dynamic memory structures using <code>realloc()</code> to cleanly support unpredictable data growth past original macro definitions.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
+
+```
